@@ -62,77 +62,78 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
                 case 2 :
                     
                     verde();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 4 :
                     
                     nverde();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 8 :
                 
                     laranja();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 16 :
                 
                     amarelo();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 32 :
                 
                     vermelho();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 64 :
                 
                     nvermelho();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 128 :
                 
                     magenta();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 256 :
                     
                     nmagenta();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 512 :
                 
                     nazul();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                 
                     break;
                 case 1024 :
                 
                     ciano();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 case 2048 :
                 
                     nciano();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     
                     break;
                 default:
                     reset();
-                    printf("%d", mat[i][j]);
+                    printf("%4d", mat[i][j]);
                     break;
             }
         }
         printf("\n");//printf usado para separar a matriz corretamente(linha por linha).
     }
+    printf("\n");
 }
 
 void inicializa(int mat[4][4]){//função que entrega a todas as posições da matriz o valor 0.
@@ -163,20 +164,73 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
     } while(botou == 0);
 }
 
-void cima(){
+/* Por enquanto a movimentação não ta se comportando da maneira que deve.
+   Se ele unir, ele não vai movimentar pro lugar que ele tem que ir se ficar um zero.
+   Tô pensando em montar um while no segundo if, onde verifica se é 0.
+*/
 
+void cima(int mat[4][4]){
+    for(int i = 1; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            if(mat[i - 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o valor em cima for igual ao valor em baixo
+                mat[i - 1][j] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+                mat[i][j] = 0;
+                i = 1;
+                j = 0;
+            }
+            if(mat[i - 1][j] == 0 && mat[i][j] != 0){ //Se o valor de cima for 0 quer dizer que está vazio e pode subir
+                mat[i - 1][j] = mat[i][j];
+                mat[i][j] = 0;
+                i = 1;
+                j = 0;
+            }
+        }
+    }
 }
 
-void baixo(){
-
+void baixo(int mat[4][4]){
+    for(int i = 0; i < 4 - 1; i++){
+        for(int j = 0; j < 4; j++){
+            if(mat[i + 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o valor em baixo for igual ao valor em cima
+                mat[i + 1][j] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+                mat[i][j] = 0;
+            }
+            if(mat[i + 1][j] == 0 && mat[i][j] != 0){ //Se o valor de baixo for 0 quer dizer que está vazio e pode descer
+                mat[i + 1][j] = mat[i][j];
+                mat[i][j] = 0;
+            }
+        }
+    }
 }
 
-void esquerda(){
-
+void esquerda(int mat[4][4]){
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j < 4; j++){
+            if(mat[i][j - 1] == mat[i][j] && mat[i][j] != 0){ //Se o valor da esquerda for igual ao valor da direita
+                mat[i][j - 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+                mat[i][j] = 0;
+            }
+            if(mat[i][j - 1] == 0 && mat[i][j] != 0){ //Se o valor da esquerda for 0 quer dizer que está vazio e pode se movimentar
+                mat[i][j - 1] = mat[i][j];
+                mat[i][j] = 0;
+            }
+        }
+    }
 }
 
-void direita(){
-
+void direita(int mat[4][4]){
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4 - 1; j++){
+            if(mat[i][j + 1] == mat[i][j] && mat[i][j] != 0){ //Se o valor da direita for igual ao valor da esquerda
+                mat[i][j + 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+                mat[i][j] = 0;
+            }
+            if(mat[i][j + 1] == 0 && mat[i][j] != 0){ //Se o valor da direita for 0 quer dizer que está vazio e pode se movimentar
+                mat[i][j + 1] = mat[i][j];
+                mat[i][j] = 0;
+            }
+        }
+    }
 }
 
 void top5(float tempos[25], char nome[]){
@@ -214,6 +268,7 @@ int joga(int mapa[4][4]) {
 
     while (fim != 1){
         scanf("%c", &movimento);
+        scanf("%*c");
 
         switch (movimento){//switch para checar a movimentação do jogador.
         case 'w':
@@ -232,8 +287,8 @@ int joga(int mapa[4][4]) {
         default:
             break;
         }
-
         botabloco(mapa);  //adição de mais elementos a matriz a cada movimentação do jogador.
+        imprime(mapa);
     }
 
     printf("Deseja jogar novamente? \n Digite 's' para sim ou qualquer outra tecla para não..."); //Pergunta para construção da lista de top 5. 
