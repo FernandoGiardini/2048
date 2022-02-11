@@ -2,27 +2,27 @@
 #include<stdlib.h>
 #include<time.h>
 
-void green(){//Linha  4 à 54 são funções para facilitar a troca de cores dos valores da matriz.
+void verde(){//Linha  4 à 54 são funções para facilitar a troca de cores dos valores da matriz.
     printf("\033[0;32m");
 }
 
-void bgreen(){
+void nverde(){
     printf("\033[1;32m");
 }
 
-void orange(){
+void laranja(){
     printf("\033[0;33m");
 }
 
-void yellow(){
+void amarelo(){
     printf("\033[1;33m");
 }
 
-void red(){
+void vermelho(){
     printf("\033[0;31m");
 }
 
-void bred(){
+void nvermelho(){
     printf("\033[1;31m");
 }
 
@@ -30,23 +30,23 @@ void magenta(){
     printf("\033[0;35m");
 }
 
-void bmagenta(){
+void nmagenta(){
     printf("\033[1;35m");
 } 
 
-void blue(){
+void azul(){
     printf("\033[0;34m");
 }
 
-void bblue(){
+void nazul(){
     printf("\033[1;34m");
 }
 
-void cyan(){
+void ciano(){
     printf("\033[0;36m");
 }
 
-void bcyan(){
+void nciano(){
     printf("\033[1;36m");
 }
 
@@ -61,37 +61,37 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
             switch(mat[i][j]){// switch para fazer a checagem de valores e assim poder alocar as cores de cada valor. 
                 case 2 :
                     
-                    green();
+                    verde();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 4 :
                     
-                    bgreen();
+                    nverde();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 8 :
                 
-                    orange();
+                    laranja();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 16 :
                 
-                    yellow();
+                    amarelo();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 32 :
                 
-                    red();
+                    vermelho();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 64 :
                 
-                    bred();
+                    nvermelho();
                     printf("%d", mat[i][j]);
                     
                     break;
@@ -103,25 +103,25 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
                     break;
                 case 256 :
                     
-                    bmagenta();
+                    nmagenta();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 512 :
                 
-                    bblue();
+                    nazul();
                     printf("%d", mat[i][j]);
                 
                     break;
                 case 1024 :
                 
-                    cyan();
+                    ciano();
                     printf("%d", mat[i][j]);
                     
                     break;
                 case 2048 :
                 
-                    bcyan();
+                    nciano();
                     printf("%d", mat[i][j]);
                     
                     break;
