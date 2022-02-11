@@ -169,23 +169,31 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
    Tô pensando em montar um while no segundo if, onde verifica se é 0.
 */
 
+void sobeValores(int mat[4][4]){
+    for(int i = 1; i < 4; i++){ //A operação de juntar dois gera blocos vazios, então utiliza-se o seguinte algoritmo para subir os blocos que podem
+        for(int j = 0; j < 4; j++){
+            int linhaAtual = i;
+            
+            while(mat[linhaAtual - 1][j] == 0 && mat[linhaAtual][j] != 0 && linhaAtual > 0){ //Enquanto a linha de cima estiver vazia e a linha atual não for vazia
+                mat[linhaAtual - 1][j] = mat[linhaAtual][j]; //Linha de cima recebe o que está na linha atual
+                mat[linhaAtual][j] = 0; //Linha atual fica vazia
+                linhaAtual--; //Linha atual se tornará a linha anterior a ela
+            }
+        }
+    }
+}
+
 void cima(int mat[4][4]){
+    sobeValores(mat);
     for(int i = 1; i < 4; i++){
         for(int j = 0; j < 4; j++){
             if(mat[i - 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o valor em cima for igual ao valor em baixo
                 mat[i - 1][j] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
                 mat[i][j] = 0;
-                i = 1;
-                j = 0;
-            }
-            if(mat[i - 1][j] == 0 && mat[i][j] != 0){ //Se o valor de cima for 0 quer dizer que está vazio e pode subir
-                mat[i - 1][j] = mat[i][j];
-                mat[i][j] = 0;
-                i = 1;
-                j = 0;
             }
         }
     }
+    sobeValores(mat);
 }
 
 void baixo(int mat[4][4]){
