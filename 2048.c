@@ -307,6 +307,11 @@ int joga(int mapa[4][4]) {
 
     while (fim != 1){
         scanf("%c", &movimento);
+        while (movimento != 'w' && movimento != 'a' && movimento != 's' && movimento != 'd'){
+            printf("Esse movimento não é possível, tente novamente!\n");
+            scanf("%c", &movimento);
+        }
+        
         scanf("%*c");
 
         switch (movimento){//switch para checar a movimentação do jogador.
