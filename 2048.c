@@ -164,48 +164,69 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
     } while(botou == 0);
 }
 
-/* Por enquanto a movimentação não ta se comportando da maneira que deve.
-   Se ele unir, ele não vai movimentar pro lugar que ele tem que ir se ficar um zero.
-   Tô pensando em montar um while no segundo if, onde verifica se é 0.
-*/
-
 void sobeValores(int mat[4][4]){
-    for(int i = 1; i < 4; i++){ //A operação de juntar dois gera blocos vazios, então utiliza-se o seguinte algoritmo para subir os blocos que podem
+    for(int i = 1; i < 4; i++){
         for(int j = 0; j < 4; j++){
             int linhaAtual = i;
             
-            while(mat[linhaAtual - 1][j] == 0 && mat[linhaAtual][j] != 0 && linhaAtual > 0){ //Enquanto a linha de cima estiver vazia e a linha atual não for vazia
-                mat[linhaAtual - 1][j] = mat[linhaAtual][j]; //Linha de cima recebe o que está na linha atual
-                mat[linhaAtual][j] = 0; //Linha atual fica vazia
-                linhaAtual--; //Linha atual se tornará a linha anterior a ela
+            while(mat[linhaAtual - 1][j] == 0 && mat[linhaAtual][j] != 0 && linhaAtual > 0){ //Enquanto o bloco de cima estiver vazio e o bloco atual não for vazio
+                mat[linhaAtual - 1][j] = mat[linhaAtual][j]; //Bloco de cima recebe o que está no bloco atual
+                mat[linhaAtual][j] = 0; //Bloco atual fica vazio
+                linhaAtual--; //Verificando o bloco na linha anterior
             }
         }
     }
 }
 
 void cima(int mat[4][4]){
-    sobeValores(mat);
+    sobeValores(mat); //Subindo todos os blocos antes de juntar
     for(int i = 1; i < 4; i++){
         for(int j = 0; j < 4; j++){
-            if(mat[i - 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o valor em cima for igual ao valor em baixo
-                mat[i - 1][j] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+            if(mat[i - 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o bloco em cima for igual ao bloco atual
+                mat[i - 1][j] *= 2;         //Vai multiplicar por 2(mesma coisa que somar)
                 mat[i][j] = 0;
             }
         }
     }
-    sobeValores(mat);
+    sobeValores(mat);//Subindo os blocos novamente porque juntar gera lugares vazios
+}
+
+void desceValores(int mat[4][4]){
+    for(int i = 4 - 2; i >= 0; i--){
+        for(int j = 0; j < 4; j++){
+            int linhaAtual = i;
+            
+            while(mat[linhaAtual + 1][j] == 0 && mat[linhaAtual][j] != 0 && linhaAtual < 4 - 1){ //Enquanto o bloco de baixo estiver vazio e o bloco atual não for vazio
+                mat[linhaAtual + 1][j] = mat[linhaAtual][j]; //Bloco de baixo recebe o que está no bloco atual
+                mat[linhaAtual][j] = 0; //Bloco atual fica vazio
+                linhaAtual++; //Verificando o bloco na próxima linha
+            }
+        }
+    }
 }
 
 void baixo(int mat[4][4]){
-    for(int i = 0; i < 4 - 1; i++){
+    for(int i = 4 - 2; i >= 0; i--){//Começando por baixo para juntar os blocos de baixo para cima, como o jogo funciona
         for(int j = 0; j < 4; j++){
-            if(mat[i + 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o valor em baixo for igual ao valor em cima
-                mat[i + 1][j] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
+            desceValores(mat); //Descendo todos os blocos antes de juntar
+            if(mat[i + 1][j] == mat[i][j] && mat[i][j] != 0){ //Se o bloco em baixo for igual ao bloco atual
+                mat[i + 1][j] *= 2;         //Vai multiplicar por 2(mesma coisa que somar)
                 mat[i][j] = 0;
             }
-            if(mat[i + 1][j] == 0 && mat[i][j] != 0){ //Se o valor de baixo for 0 quer dizer que está vazio e pode descer
-                mat[i + 1][j] = mat[i][j];
-                mat[i][j] = 0;
+            desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
+        }
+    }
+}
+
+void moveValoresEsquerda(int mat[4][4]){
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j < 4; j++){
+            int colunaAtual = j;
+            
+            while(mat[i][colunaAtual - 1] == 0 && mat[i][colunaAtual] != 0 && colunaAtual > 0){ //Se o bloco da esquerda estiver vazio e o bloco atual não for vazio
+                mat[i][colunaAtual - 1] = mat[i][colunaAtual]; //Bloco da esquerda recebe o que está no bloco atual
+                mat[i][colunaAtual] = 0; //Bloco atual fica vazio
+                colunaAtual--; //Verificando o bloco na coluna anterior
             }
         }
     }
@@ -214,13 +235,25 @@ void baixo(int mat[4][4]){
 void esquerda(int mat[4][4]){
     for(int i = 0; i < 4; i++){
         for(int j = 1; j < 4; j++){
+            moveValoresEsquerda(mat); //Movendo os blocos para a esquerda para 
             if(mat[i][j - 1] == mat[i][j] && mat[i][j] != 0){ //Se o valor da esquerda for igual ao valor da direita
                 mat[i][j - 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
                 mat[i][j] = 0;
             }
-            if(mat[i][j - 1] == 0 && mat[i][j] != 0){ //Se o valor da esquerda for 0 quer dizer que está vazio e pode se movimentar
-                mat[i][j - 1] = mat[i][j];
-                mat[i][j] = 0;
+            moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
+        }
+    }
+}
+
+void moveValoresDireita(int mat[4][4]){
+    for(int i = 0; i < 4; i++){
+        for(int j = 4 - 2; j >= 0; j--){
+            int colunaAtual = j;
+            
+            while(mat[i][colunaAtual + 1] == 0 && mat[i][colunaAtual] != 0 && colunaAtual < 4 - 1){ //Enquanto o bloco da direita estiver vazio e bloco atual não for vazio
+                mat[i][colunaAtual + 1] = mat[i][colunaAtual]; //Bloco da direita recebe o que está no bloco atual
+                mat[i][colunaAtual] = 0; //Bloco atual fica vazio
+                colunaAtual++; //Verificando o bloco na próxima coluna
             }
         }
     }
@@ -228,15 +261,13 @@ void esquerda(int mat[4][4]){
 
 void direita(int mat[4][4]){
     for(int i = 0; i < 4; i++){
-        for(int j = 0; j < 4 - 1; j++){
+        for(int j = 4 - 2; j >= 0; j--){
+            moveValoresDireita(mat); //Movendo os blocos para a direita
             if(mat[i][j + 1] == mat[i][j] && mat[i][j] != 0){ //Se o valor da direita for igual ao valor da esquerda
                 mat[i][j + 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
                 mat[i][j] = 0;
             }
-            if(mat[i][j + 1] == 0 && mat[i][j] != 0){ //Se o valor da direita for 0 quer dizer que está vazio e pode se movimentar
-                mat[i][j + 1] = mat[i][j];
-                mat[i][j] = 0;
-            }
+            moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
         }
     }
 }
