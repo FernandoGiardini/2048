@@ -174,6 +174,7 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
         if (mat[linha][coluna] == 0){//usando a função rand nas variáveis anteriores,e este if, achamos as posições da matriz que podem  
                                     //receber os novos blocos de valor 2 ou 4(as que tem valor 0).
             mat[linha][coluna] = ((rand() % 2) + 1) * 2;
+            //mat[linha][coluna] = 1024;
             botou = 1;  //Na linha 92 onde ja foi encontrada uma posição disponível, ela recebe (0+1*2= 2) ou(1+1*2 = 4).
         }               //E levantamos a flag (botou=1) para sair do laço.
 
@@ -193,25 +194,19 @@ void clonaMatriz(int mat[4][4], int clonemat[4][4]){ //Função para clonar a ma
 
 int checaMatriz(int mat[4][4], int clonemat[4][4]){
 
-    int sim=0;
+    int iguais=0;
 
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
         {
             if(clonemat[i][j] = mat[i][j]){
-                sim++;
+                iguais++;
             }
         }    
     }
 
-    if (sim == 16)
-    {
-        return 1;
-    }else{
-        return 0;
-    }
-    
+    return (iguais == 16);    
 }
 
 int sobeValores(int mat[4][4]){
@@ -234,12 +229,9 @@ int sobeValores(int mat[4][4]){
 
     checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
 
-    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
-    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
-        return checagem;
-    }else{
-        return 0;
-    }
+    //caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+    return checagem;
 }
 
 int cima(int mat[4][4]){
@@ -256,13 +248,8 @@ int cima(int mat[4][4]){
         }
     }
     possivelmover = sobeValores(mat);//Subindo os blocos novamente porque juntar gera lugares vazios
-
-    if (possivelmover == 1)
-    {
-        return possivelmover;
-    }else{
-        return 0;
-    }
+       
+    return possivelmover;
 }
 
 int desceValores(int mat[4][4]){
@@ -284,13 +271,9 @@ int desceValores(int mat[4][4]){
     }
 
     checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
-
-    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
-    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
-        return checagem;
-    }else{
-        return 0;
-    }
+    //caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+    return checagem;
 }
 
 int baixo(int mat[4][4]){
@@ -307,13 +290,7 @@ int baixo(int mat[4][4]){
             possivelmover = desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
         }
     }
-
-    if (possivelmover == 1)
-    {
-        return possivelmover;
-    }else{
-        return 0;
-    }
+    return possivelmover;
 }
 
 int moveValoresEsquerda(int mat[4][4]){ //Função de tipo inteiro para controle da flag de jogo.
@@ -335,13 +312,9 @@ int moveValoresEsquerda(int mat[4][4]){ //Função de tipo inteiro para controle
     }
 
     checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
-
-    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
-    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
-        return checagem;
-    }else{
-        return 0;
-    }
+    //caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+    return checagem;
 }
 
 int esquerda(int mat[4][4]){
@@ -359,12 +332,7 @@ int esquerda(int mat[4][4]){
         }
     }    
 
-    if (possivelmover == 1)
-    {
-        return possivelmover;
-    }else{
-        return 0;
-    }
+    return possivelmover;    
 }
 
 int moveValoresDireita(int mat[4][4]){
@@ -387,13 +355,10 @@ int moveValoresDireita(int mat[4][4]){
 
     checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
 
-    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
-    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
-        return checagem;
-    }else{
-        return 0;
-    }
-}
+    //caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+    return checagem;
+}    
 
 int direita(int mat[4][4]){
 
@@ -410,12 +375,7 @@ int direita(int mat[4][4]){
         }
     }
 
-     if (possivelmover == 1)
-    {
-        return possivelmover;
-    }else{
-        return 0;
-    }
+    return possivelmover;  
 }
 
 void top5(float tempos[25], char nome[]){
