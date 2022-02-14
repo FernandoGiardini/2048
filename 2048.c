@@ -63,67 +63,78 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
                     
                     verde();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 4 :
                     
                     nverde();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 8 :
                 
                     laranja();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 16 :
                 
                     amarelo();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 32 :
                 
                     vermelho();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 64 :
                 
                     nvermelho();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 128 :
                 
                     magenta();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 256 :
                     
                     nmagenta();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 512 :
                 
                     nazul();
                     printf("%4d", mat[i][j]);
-                
+                    reset();
+
                     break;
                 case 1024 :
                 
                     ciano();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 case 2048 :
                 
                     nciano();
                     printf("%4d", mat[i][j]);
-                    
+                    reset();
+
                     break;
                 default:
                     reset();
@@ -134,6 +145,11 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
         printf("\n");//printf usado para separar a matriz corretamente(linha por linha).
     }
     printf("\n");
+}
+
+void limpa_linha() {
+    scanf("%*[^\n]");   // aqui vai ler lido qualquer lixo do buffer q houver exceto o '\n'
+    scanf("%*c");    // aqui vai ser lido o '\n' que é gerado ao se dar um ENTER e vai descatá-lo
 }
 
 void inicializa(int mat[4][4]){//função que entrega a todas as posições da matriz o valor 0.
@@ -164,7 +180,46 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
     } while(botou == 0);
 }
 
-void sobeValores(int mat[4][4]){
+void clonaMatriz(int mat[4][4], int clonemat[4][4]){ //Função para clonar a matriz, necessária para verificar se houve movimento na matriz.
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            clonemat[i][j] = mat[i][j];
+        }    
+    }
+}
+
+int checaMatriz(int mat[4][4], int clonemat[4][4]){
+
+    int sim=0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if(clonemat[i][j] = mat[i][j]){
+                sim++;
+            }
+        }    
+    }
+
+    if (sim == 16)
+    {
+        return 1;
+    }else{
+        return 0;
+    }
+    
+}
+
+int sobeValores(int mat[4][4]){
+
+    int matprefuncao[4][4],checagem;//A matriz é clonada ao entrar na função e será comparada com a matriz que sair da função(espera-se, modificada).
+                                
+    clonaMatriz(mat,matprefuncao);
+
     for(int i = 1; i < 4; i++){
         for(int j = 0; j < 4; j++){
             int linhaAtual = i;
@@ -176,9 +231,21 @@ void sobeValores(int mat[4][4]){
             }
         }
     }
+
+    checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
+
+    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+        return checagem;
+    }else{
+        return 0;
+    }
 }
 
-void cima(int mat[4][4]){
+int cima(int mat[4][4]){
+
+    int possivelmover=0;
+
     sobeValores(mat); //Subindo todos os blocos antes de juntar
     for(int i = 1; i < 4; i++){
         for(int j = 0; j < 4; j++){
@@ -188,10 +255,22 @@ void cima(int mat[4][4]){
             }
         }
     }
-    sobeValores(mat);//Subindo os blocos novamente porque juntar gera lugares vazios
+    possivelmover = sobeValores(mat);//Subindo os blocos novamente porque juntar gera lugares vazios
+
+    if (possivelmover == 1)
+    {
+        return possivelmover;
+    }else{
+        return 0;
+    }
 }
 
-void desceValores(int mat[4][4]){
+int desceValores(int mat[4][4]){
+
+    int matprefuncao[4][4],checagem;//A matriz é clonada ao entrar na função e será comparada com a matriz que sair da função(espera-se, modificada).
+                                
+    clonaMatriz(mat,matprefuncao);
+
     for(int i = 4 - 2; i >= 0; i--){
         for(int j = 0; j < 4; j++){
             int linhaAtual = i;
@@ -203,9 +282,21 @@ void desceValores(int mat[4][4]){
             }
         }
     }
+
+    checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
+
+    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+        return checagem;
+    }else{
+        return 0;
+    }
 }
 
-void baixo(int mat[4][4]){
+int baixo(int mat[4][4]){
+
+    int possivelmover=0;
+
     for(int i = 4 - 2; i >= 0; i--){//Começando por baixo para juntar os blocos de baixo para cima, como o jogo funciona
         for(int j = 0; j < 4; j++){
             desceValores(mat); //Descendo todos os blocos antes de juntar
@@ -213,13 +304,25 @@ void baixo(int mat[4][4]){
                 mat[i + 1][j] *= 2;         //Vai multiplicar por 2(mesma coisa que somar)
                 mat[i][j] = 0;
             }
-            desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
+            possivelmover = desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
         }
+    }
+
+    if (possivelmover == 1)
+    {
+        return possivelmover;
+    }else{
+        return 0;
     }
 }
 
-void moveValoresEsquerda(int mat[4][4]){
-    for(int i = 0; i < 4; i++){
+int moveValoresEsquerda(int mat[4][4]){ //Função de tipo inteiro para controle da flag de jogo.
+
+    int matprefuncao[4][4],checagem;//A matriz é clonada ao entrar na função e será comparada com a matriz que sair da função(espera-se, modificada).
+                                
+    clonaMatriz(mat,matprefuncao);
+
+    for(int i = 0; i < 4; i++){ 
         for(int j = 1; j < 4; j++){
             int colunaAtual = j;
             
@@ -230,9 +333,21 @@ void moveValoresEsquerda(int mat[4][4]){
             }
         }
     }
+
+    checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
+
+    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+        return checagem;
+    }else{
+        return 0;
+    }
 }
 
-void esquerda(int mat[4][4]){
+int esquerda(int mat[4][4]){
+
+    int possivelmover=0;
+
     for(int i = 0; i < 4; i++){
         for(int j = 1; j < 4; j++){
             moveValoresEsquerda(mat); //Movendo os blocos para a esquerda para 
@@ -240,12 +355,24 @@ void esquerda(int mat[4][4]){
                 mat[i][j - 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
                 mat[i][j] = 0;
             }
-            moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
+            possivelmover = moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
         }
+    }    
+
+    if (possivelmover == 1)
+    {
+        return possivelmover;
+    }else{
+        return 0;
     }
 }
 
-void moveValoresDireita(int mat[4][4]){
+int moveValoresDireita(int mat[4][4]){
+
+    int matprefuncao[4][4],checagem;//A matriz é clonada ao entrar na função e será comparada com a matriz que sair da função(espera-se, modificada).
+                                
+    clonaMatriz(mat,matprefuncao);
+
     for(int i = 0; i < 4; i++){
         for(int j = 4 - 2; j >= 0; j--){
             int colunaAtual = j;
@@ -257,9 +384,21 @@ void moveValoresDireita(int mat[4][4]){
             }
         }
     }
+
+    checagem = checaMatriz(mat,matprefuncao); // Comparação da matriz inicial com a que saiu do while acima.
+
+    if (checagem == 1)//caso elas sejam idênticas(não houve mudança na matriz após passar pela função de movimentação) significa
+    {               // que não é possível o movimento na direção desta função. Essa informação será usada para verificar se o jogador perdeu.
+        return checagem;
+    }else{
+        return 0;
+    }
 }
 
-void direita(int mat[4][4]){
+int direita(int mat[4][4]){
+
+    int possivelmover=0;
+
     for(int i = 0; i < 4; i++){
         for(int j = 4 - 2; j >= 0; j--){
             moveValoresDireita(mat); //Movendo os blocos para a direita
@@ -267,8 +406,15 @@ void direita(int mat[4][4]){
                 mat[i][j + 1] *= 2;         //Vai multiplicar por 2, mesma coisa que somar
                 mat[i][j] = 0;
             }
-            moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
+            possivelmover = moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
         }
+    }
+
+     if (possivelmover == 1)
+    {
+        return possivelmover;
+    }else{
+        return 0;
     }
 }
 
@@ -302,37 +448,50 @@ void top5(float tempos[25], char nome[]){
 
 int joga(int mapa[4][4]) { 
 
-    int fim=0;
-    char movimento, denovo;
+    int  naopode=0;
+    char movimento, denovo=1;
 
-    while (fim != 1){
+    while (denovo == 1){
         scanf("%c", &movimento);
-        while (movimento != 'w' && movimento != 'a' && movimento != 's' && movimento != 'd'){
-            printf("Esse movimento não é possível, tente novamente!\n");
-            scanf("%c", &movimento);
-        }
-        
-        scanf("%*c");
+        if (movimento == 'w' || movimento == 'a' || movimento == 's' || movimento == 'd'){
+           
+            limpa_linha();
 
-        switch (movimento){//switch para checar a movimentação do jogador.
-        case 'w':
-            cima(mapa);
-            break;
-        case 'a':
-            esquerda(mapa);
-            break;
-        case 's':
-            baixo(mapa);
-            break;
-        case 'd':
-            direita(mapa);
-            break;
+            switch (movimento){//switch para checar a movimentação do jogador.
+            case 'w':
+                naopode += cima(mapa);
+                break;
+            case 'a':
+                naopode += esquerda(mapa);
+                break;
+            case 's':
+                naopode += baixo(mapa);
+                break;
+            case 'd':
+                naopode += direita(mapa);
+                break;
+            
+            default:
+                break;
+            }
+            if(naopode == 0){
+                botabloco(mapa);
+            }else{
+                denovo =0;
+            }
+            
+            imprime(mapa);
+
+        }else{   
         
-        default:
-            break;
+            while (movimento != 'w' && movimento != 'a' && movimento != 's' && movimento != 'd')
+           {
+               printf("Esse movimento não é possível, tente novamente!\n");
+                scanf("%c", &movimento);
+           }
+
+            limpa_linha();
         }
-        botabloco(mapa);  //adição de mais elementos a matriz a cada movimentação do jogador.
-        imprime(mapa);
     }
 
     printf("Deseja jogar novamente? \n Digite 's' para sim ou qualquer outra tecla para não..."); //Pergunta para construção da lista de top 5. 
