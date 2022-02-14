@@ -378,6 +378,18 @@ int direita(int mat[4][4]){
     return possivelmover;  
 }
 
+int ganhou(int mat[4][4]){// Esta função verifica se em alguma posição da matriz mapa há um bloco de valor 2048, que categoriza o fim de jogo.
+
+    int vitoria=0;
+
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (mat[i][j] == 2048)
+                vitoria = 1;
+         
+    return vitoria;
+}
+
 void top5(float tempos[25], char nome[]){
 
     int maior;
@@ -408,6 +420,7 @@ void top5(float tempos[25], char nome[]){
 
 int joga(int mapa[4][4]) { 
 
+    limpa_linha();//para limpar o buffer ao começar um novo round.
     int  naopode=0;
     char movimento, denovo=1;
 
@@ -434,12 +447,15 @@ int joga(int mapa[4][4]) {
             default:
                 break;
             }
-            if(naopode == 0){
+            if(naopode == 0){//Se houver um movimento válido, a função bota bloco irá acrescentar mais blocos na matriz.Se não, significa que o jogo acabou.
                 botabloco(mapa);
             }else{
-                denovo =0;
+                denovo = 0;//então com o jogo acabado levantamos a flag para sair do while e da função joga.
             }
             
+            if(ganhou(mapa))//se for verificado que há um bloco de valor 2048, o jogo também acaba.
+                denovo = 0;
+
             imprime(mapa);
 
         }else{   
@@ -475,12 +491,12 @@ int main(){
     printf("Informe o nome do jogador: ");
     fgets(nomejogador, 20, stdin);
 
-    inicializa(mapa);
-    botabloco(mapa);
-    botabloco(mapa);
-    imprime(mapa);
-
     while(denovo == 1){
+        inicializa(mapa);
+        botabloco(mapa);
+        botabloco(mapa);
+        imprime(mapa);
+
         inicio = clock ();
 
         denovo = joga(mapa);
