@@ -3,9 +3,10 @@
 #include<string.h>
 #include<time.h>
 
-#define PODE_MOVIMENTO 1
-#define VENCEU 2
-#define PERDEU 3
+int cima(int mat[4][4]);
+int baixo(int mat[4][4]);
+int esquerda(int mat[4][4]);
+int direita(int mat[4][4]);
 
 void verde(){//Linha  4 à 54 são funções para facilitar a troca de cores dos valores da matriz.
     printf("\033[0;32m");
@@ -257,7 +258,7 @@ int sobeValores(int mat[4][4]){
     }
 
     if(!movimentou){
-        return podeMovimentar;
+        return podeMovimentar(mat);
     } 
     return movimentou;
 }
@@ -298,7 +299,7 @@ int desceValores(int mat[4][4]){
     }
 
     if(!movimentou){
-        return podeMovimentar;
+        return podeMovimentar(mat);
     } 
     return movimentou;
 }
@@ -340,7 +341,7 @@ int moveValoresEsquerda(int mat[4][4]){ //Função de tipo inteiro para controle
     }
 
     if(!movimentou){
-        return podeMovimentar;
+        return podeMovimentar(mat);
     } 
     return movimentou;
 }
@@ -382,7 +383,7 @@ int moveValoresDireita(int mat[4][4]){
     }
     
     if(!movimentou){
-        return podeMovimentar;
+        return podeMovimentar(mat);
     } 
     return movimentou;
 }    
@@ -409,15 +410,15 @@ int direita(int mat[4][4]){
 }
 
 int ganhou(int mat[4][4]){// Esta função verifica se em alguma posição da matriz mapa há um bloco de valor 2048, que categoriza o fim de jogo.
-
-    int vitoria=0;
-
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (mat[i][j] == 2048)
-                vitoria = 1;
-         
-    return vitoria;
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            if (mat[i][j] == 2048){
+                printf("Você Venceu!!\n");
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 void top5(double tempos[25], char nome[]){
@@ -449,7 +450,7 @@ void top5(double tempos[25], char nome[]){
 }
 
 int joga(int mapa[4][4]) { 
-    int  naopode=0;
+    int  movimentou = 0;
     char movimento, denovo=1;
 
     while (denovo == 1){
@@ -458,30 +459,31 @@ int joga(int mapa[4][4]) {
         if (movimento == 'w' || movimento == 'a' || movimento == 's' || movimento == 'd'){
             switch (movimento){//switch para checar a movimentação do jogador.
             case 'w':
-                naopode += cima(mapa);
+                movimentou = cima(mapa);
                 break;
             case 'a':
-                naopode += esquerda(mapa);
+                movimentou = esquerda(mapa);
                 break;
             case 's':
-                naopode += baixo(mapa);
+                movimentou = baixo(mapa);
                 break;
             case 'd':
-                naopode += direita(mapa);
+                printf("leu");
+                movimentou = direita(mapa);
                 break;
             
             default:
                 break;
             }
-            if(naopode == 0){//Se houver um movimento válido, a função bota bloco irá acrescentar mais blocos na matriz.Se não, significa que o jogo acabou.
+            if(movimentou){//Se houver um movimento válido, a função bota bloco irá acrescentar mais blocos na matriz.Se não, significa que o jogo acabou.
                 botabloco(mapa);
             }else{
                 denovo = 0;//então com o jogo acabado levantamos a flag para sair do while e da função joga.
             }
             
-            if(ganhou(mapa))//se for verificado que há um bloco de valor 2048, o jogo também acaba.
+            if(ganhou(mapa)){//se for verificado que há um bloco de valor 2048, o jogo também acaba.
                 denovo = 0;
-
+            }
             imprime(mapa);
 
         }else{   
@@ -497,14 +499,10 @@ int joga(int mapa[4][4]) {
     }
 
     scanf("%*c");
-    printf("Deseja jogar novamente? \n Digite 's' para sim ou qualquer outra tecla para não..."); //Pergunta para construção da lista de top 5. 
+    printf("Deseja jogar novamente?\nDigite 's' para sim ou qualquer outra tecla para não...\n"); //Pergunta para construção da lista de top 5. 
     scanf("%c", &denovo);
 
-    if(denovo == 's'){//Condicional para manter ou não a flag do laço de repetição responsável pelas partidas jogadas.
-        return 1;
-    }else{
-        return 0;
-    }
+    return denovo =='s';//Condicional para manter ou não a flag do laço de repetição responsável pelas partidas jogadas.
 }
 
 
