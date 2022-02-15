@@ -179,8 +179,8 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
 
         if (mat[linha][coluna] == 0){//usando a função rand nas variáveis anteriores,e este if, achamos as posições da matriz que podem  
                                     //receber os novos blocos de valor 2 ou 4(as que tem valor 0).
-            //mat[linha][coluna] = ((rand() % 2) + 1) * 2;
-            mat[linha][coluna] = 1024;
+            mat[linha][coluna] = ((rand() % 2) + 1) * 2;
+            //mat[linha][coluna] = 1024;
             botou = 1;  //Na linha 92 onde ja foi encontrada uma posição disponível, ela recebe (0+1*2= 2) ou(1+1*2 = 4).
         }               //E levantamos a flag (botou=1) para sair do laço.
 
@@ -199,46 +199,17 @@ void clonaMatriz(int mat[4][4], int clonemat[4][4]){ //Função para clonar a ma
 }
 
 int matrizIgual(int mat1[4][4], int mat2[4][4]){
+    int quantidadeIguais = 0;
+
     for (int i = 0; i < 4; i++){
         for (int j = 0; j < 4; j++){
             if(mat1[i][j] == mat2[i][j]){
-                return 1;
+                quantidadeIguais++;
             }
         }    
     }
 
-    return 0;
-}
-
-int podeMovimentar(int mat[4][4]){ //função para verificar se pode ser feito algum movimento
-    int cloneMatriz[4][4];
-    clonaMatriz(mat, cloneMatriz);
-
-    cima(cloneMatriz);
-
-    if(!matrizIgual(mat, cloneMatriz)){ //se a matriz original for diferente da matriz depois de mover quer dizer que o movimento pode ser feito
-        return 1;
-    }
-
-    baixo(cloneMatriz);
-
-    if(!matrizIgual(mat, cloneMatriz)){
-        return 1;
-    }
-
-    esquerda(cloneMatriz);
-
-    if(!matrizIgual(mat, cloneMatriz)){
-        return 1;
-    }
-
-    direita(cloneMatriz);
-    
-    if(!matrizIgual(mat, cloneMatriz)){
-        return 1;
-    }
-
-    return 0;
+    return quantidadeIguais == 16;
 }
 
 int sobeValores(int mat[4][4]){
@@ -257,9 +228,6 @@ int sobeValores(int mat[4][4]){
         }
     }
 
-    if(!movimentou){
-        return podeMovimentar(mat);
-    } 
     return movimentou;
 }
 
@@ -276,8 +244,14 @@ int cima(int mat[4][4]){
             }
         }
     }
-    movimentou = sobeValores(mat);
-    
+
+    if(!movimentou){
+        movimentou = sobeValores(mat);
+    }
+    else{
+        sobeValores(mat);
+    }
+
     return movimentou;
 }
 
@@ -298,9 +272,6 @@ int desceValores(int mat[4][4]){
         }
     }
 
-    if(!movimentou){
-        return podeMovimentar(mat);
-    } 
     return movimentou;
 }
 
@@ -318,7 +289,12 @@ int baixo(int mat[4][4]){
             }
         }
     }
-    movimentou = desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
+    if(!movimentou){
+        movimentou = desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
+    }
+    else{
+        desceValores(mat);//Descendo os blocos novamente porque juntar gera lugares vazios
+    }
 
     return movimentou;
 }
@@ -340,9 +316,7 @@ int moveValoresEsquerda(int mat[4][4]){ //Função de tipo inteiro para controle
         }
     }
 
-    if(!movimentou){
-        return podeMovimentar(mat);
-    } 
+
     return movimentou;
 }
 
@@ -360,7 +334,12 @@ int esquerda(int mat[4][4]){
             }
         }
     }
-    movimentou = moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
+    if(!movimentou){
+        movimentou = moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
+    }
+    else{
+        moveValoresEsquerda(mat); //Movendo novamente porque juntar gera blocos vazios
+    }
 
     return movimentou;    
 }
@@ -381,10 +360,7 @@ int moveValoresDireita(int mat[4][4]){
             }
         }
     }
-    
-    if(!movimentou){
-        return podeMovimentar(mat);
-    } 
+
     return movimentou;
 }    
 
@@ -404,7 +380,12 @@ int direita(int mat[4][4]){
         }
     }
 
-    movimentou = moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
+    if(!movimentou){
+        movimentou = moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
+    }
+    else{
+        moveValoresDireita(mat); //Movendo novamente porque juntar gera espaços vazios
+    }
 
     return movimentou;
 }
@@ -413,7 +394,6 @@ int ganhou(int mat[4][4]){// Esta função verifica se em alguma posição da ma
     for (int i = 0; i < 4; i++){
         for (int j = 0; j < 4; j++){
             if (mat[i][j] == 2048){
-                printf("Você Venceu!!\n");
                 return 1;
             }
         }
@@ -449,6 +429,37 @@ void top5(double tempos[25], char nome[]){
 
 }
 
+int podeMovimentar(int mat[4][4]){ //função para verificar se pode ser feito algum movimento
+    int cloneMatriz[4][4];
+    clonaMatriz(mat, cloneMatriz);
+
+    cima(cloneMatriz);
+
+    if(!matrizIgual(mat, cloneMatriz)){ //se a matriz original for diferente da matriz depois de mover quer dizer que o movimento pode ser feito
+        return 1;
+    }
+
+    baixo(cloneMatriz);
+
+    if(!matrizIgual(mat, cloneMatriz)){
+        return 1;
+    }
+
+    esquerda(cloneMatriz);
+
+    if(!matrizIgual(mat, cloneMatriz)){
+        return 1;
+    }
+
+    direita(cloneMatriz);
+    
+    if(!matrizIgual(mat, cloneMatriz)){
+        return 1;
+    }
+
+    return 0;
+}
+
 int joga(int mapa[4][4]) { 
     int  movimentou = 0;
     char movimento, denovo=1;
@@ -468,7 +479,6 @@ int joga(int mapa[4][4]) {
                 movimentou = baixo(mapa);
                 break;
             case 'd':
-                printf("leu");
                 movimentou = direita(mapa);
                 break;
             
@@ -478,13 +488,19 @@ int joga(int mapa[4][4]) {
             if(movimentou){//Se houver um movimento válido, a função bota bloco irá acrescentar mais blocos na matriz.Se não, significa que o jogo acabou.
                 botabloco(mapa);
             }else{
-                denovo = 0;//então com o jogo acabado levantamos a flag para sair do while e da função joga.
-            }
-            
-            if(ganhou(mapa)){//se for verificado que há um bloco de valor 2048, o jogo também acaba.
-                denovo = 0;
+                if(!podeMovimentar(mapa)){
+                    denovo = 0;//então com o jogo acabado levantamos a flag para sair do while e da função joga.
+                }
             }
             imprime(mapa);
+            denovo = podeMovimentar(mapa);
+            if(ganhou(mapa)){//se for verificado que há um bloco de valor 2048, o jogo também acaba.
+                denovo = 0;
+                printf("Você Venceu!!\n");
+            }
+            else if(denovo == 0){
+                printf("Você Perdeu :(\n");
+            }
 
         }else{   
         
