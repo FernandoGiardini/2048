@@ -421,17 +421,13 @@ void top5(double tempos[25], char nome[]){
 }
 
 int joga(int mapa[4][4]) { 
-
-    limpa_linha();//para limpar o buffer ao começar um novo round.
     int  naopode=0;
     char movimento, denovo=1;
 
     while (denovo == 1){
+        scanf("%*c");
         scanf("%c", &movimento);
         if (movimento == 'w' || movimento == 'a' || movimento == 's' || movimento == 'd'){
-           
-            limpa_linha();
-
             switch (movimento){//switch para checar a movimentação do jogador.
             case 'w':
                 naopode += cima(mapa);
@@ -465,13 +461,14 @@ int joga(int mapa[4][4]) {
             while (movimento != 'w' && movimento != 'a' && movimento != 's' && movimento != 'd')
            {
                printf("Esse movimento não é possível, tente novamente!\n");
+                scanf("%*c");
                 scanf("%c", &movimento);
            }
 
-            limpa_linha();
         }
     }
 
+    scanf("%*c");
     printf("Deseja jogar novamente? \n Digite 's' para sim ou qualquer outra tecla para não..."); //Pergunta para construção da lista de top 5. 
     scanf("%c", &denovo);
 
@@ -492,8 +489,7 @@ int main(){
     struct timespec comeco, fimtempo;
 
     printf("Informe o nome do jogador: ");
-    fgets(nomejogador, 20, stdin);
-    nomejogador[strlen(nomejogador) -1] = '\0';
+    scanf("%19[^\n]s", nomejogador);
 
     while(denovo == 1){
         inicializa(mapa);
