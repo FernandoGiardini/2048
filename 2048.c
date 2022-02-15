@@ -403,22 +403,22 @@ int ganhou(int mat[4][4]){// Esta função verifica se em alguma posição da ma
 
 void top5(double tempos[25], char nome[]){
 
-    int maior;
-    double aux;
-
-    for(int i = 0; i < 5; i++){
-        maior = i;
-
-        for(int j = i+1; j < 25; j++)
-        if(tempos[j] > tempos[maior]){
-            maior = j;
+    int indiceAnterior, indiceAtual, valorAuxiliar;
+    for(int i = 1; i < 25; i++){
+        indiceAnterior = i - 1;
+        while(indiceAnterior >= 0){ //Enquanto a posição anterior for maior que zero, quer dizer que eu posso verificar as coisas
+            indiceAtual = indiceAnterior + 1; //indiceAtual é a variável que armazena o indice do que está sendo verificada
+            if(tempos[indiceAtual] < tempos[indiceAnterior]){ //Se tempos na posição que está sendo verificada for menor do que o da posição anterior
+                int valorAuxiliar = tempos[indiceAnterior]; //Ele vai armazenar o valor que está na posição anterior numa variavel auxiliar
+                tempos[indiceAnterior] = tempos[indiceAtual]; //Então vai colocar o valor da posição atual na posição anterior
+                tempos[indiceAtual] = valorAuxiliar; //Vai pegar o valor que foi salvo antes na variavel auxiliar e colocar na posição atual
+            }
+            else{
+                break; //Se a posição anterior não for menor ele para o while.
+            }
+            indiceAnterior -= 1; //Diminui o valor do indice anterior
         }
-        
-        aux = tempos[i];
-        tempos[i] = tempos[maior];
-        tempos[maior] = aux;
     }
-    
     printf("Jogador: \n");
     puts(nome);
     printf("\nMelhores tempos:\n");
@@ -462,13 +462,13 @@ int podeMovimentar(int mat[4][4]){ //função para verificar se pode ser feito a
 
 int joga(int mapa[4][4]) { 
     int  movimentou = 0;
-    char movimento, denovo=1;
+    char movimento[2], denovo=1;
 
     while (denovo == 1){
-        scanf("%*c");
-        scanf("%c", &movimento);
-        if (movimento == 'w' || movimento == 'a' || movimento == 's' || movimento == 'd'){
-            switch (movimento){//switch para checar a movimentação do jogador.
+        limpa_linha();
+        scanf("%1s", movimento);
+        if (movimento[0] == 'w' || movimento[0] == 'a' || movimento[0] == 's' || movimento[0] == 'd'){
+            switch(movimento[0]){//switch para checar a movimentação do jogador.
             case 'w':
                 movimentou = cima(mapa);
                 break;
@@ -503,18 +503,13 @@ int joga(int mapa[4][4]) {
             }
 
         }else{   
-        
-            while (movimento != 'w' && movimento != 'a' && movimento != 's' && movimento != 'd')
-           {
-               printf("Esse movimento não é possível, tente novamente!\n");
-                scanf("%*c");
-                scanf("%c", &movimento);
-           }
-
+            if(movimento[0] != 'w' && movimento[0] != 'a' && movimento[0] != 's' && movimento[0] != 'd'){
+                printf("Esse movimento não é possível, tente novamente!\n");
+            }
         }
     }
 
-    scanf("%*c");
+    limpa_linha();
     printf("Deseja jogar novamente?\nDigite 's' para sim ou qualquer outra tecla para não...\n"); //Pergunta para construção da lista de top 5. 
     scanf("%c", &denovo);
 
