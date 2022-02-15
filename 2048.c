@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include<time.h>
+
 
 void verde(){//Linha  4 à 54 são funções para facilitar a troca de cores dos valores da matriz.
     printf("\033[0;32m");
@@ -173,8 +175,8 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
 
         if (mat[linha][coluna] == 0){//usando a função rand nas variáveis anteriores,e este if, achamos as posições da matriz que podem  
                                     //receber os novos blocos de valor 2 ou 4(as que tem valor 0).
-            mat[linha][coluna] = ((rand() % 2) + 1) * 2;
-            //mat[linha][coluna] = 1024;
+            //mat[linha][coluna] = ((rand() % 2) + 1) * 2;
+            mat[linha][coluna] = 1024;
             botou = 1;  //Na linha 92 onde ja foi encontrada uma posição disponível, ela recebe (0+1*2= 2) ou(1+1*2 = 4).
         }               //E levantamos a flag (botou=1) para sair do laço.
 
@@ -390,10 +392,10 @@ int ganhou(int mat[4][4]){// Esta função verifica se em alguma posição da ma
     return vitoria;
 }
 
-void top5(float tempos[25], char nome[]){
+void top5(double tempos[25], char nome[]){
 
     int maior;
-    float aux;
+    double aux;
 
     for(int i = 0; i < 5; i++){
         maior = i;
@@ -413,7 +415,7 @@ void top5(float tempos[25], char nome[]){
     printf("\nMelhores tempos:\n");
     
     for (int k = 0; k < 5; k++) {
-        printf("%.2f\n",tempos[k]);
+        printf("%.2lf\n",tempos[k]);
     }
 
 }
@@ -485,11 +487,13 @@ int main(){
 
     int k=0, denovo=1, mapa[4][4];
     char nomejogador[20];
-    float tempoCpu, tempos[25];
-    clock_t inicio, fim;
+    double tempos[25] = {0};
+
+    struct timespec comeco, fimtempo;
 
     printf("Informe o nome do jogador: ");
     fgets(nomejogador, 20, stdin);
+    nomejogador[strlen(nomejogador) -1] = '\0';
 
     while(denovo == 1){
         inicializa(mapa);
@@ -497,15 +501,13 @@ int main(){
         botabloco(mapa);
         imprime(mapa);
 
-        inicio = clock ();
-
+        clock_gettime(CLOCK_REALTIME, &comeco);
         denovo = joga(mapa);
 
-        fim = clock ();
+        clock_gettime(CLOCK_REALTIME, &fimtempo);
 
-        tempoCpu = ((double) (fim - inicio)) / CLOCKS_PER_SEC;
-
-        tempos[k] = tempoCpu;
+        double tempoGasto = (fimtempo.tv_sec - comeco.tv_sec) + (fimtempo.tv_nsec - comeco.tv_nsec)/ 1000000000.0;
+        tempos[k] = tempoGasto;
         k++;
     }
     
