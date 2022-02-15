@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+#include<float.h>
 
 int cima(int mat[4][4]);
 int baixo(int mat[4][4]);
@@ -68,83 +69,83 @@ void imprime(int mat[4][4]){ //função que imprime na tela do terminal o estado
                 case 2 :
                     
                     verde();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 4 :
                     
                     nverde();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 8 :
                 
                     laranja();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 16 :
                 
                     amarelo();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 32 :
                 
                     vermelho();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 64 :
                 
                     nvermelho();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 128 :
                 
                     magenta();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 256 :
                     
                     nmagenta();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 512 :
                 
                     nazul();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 1024 :
                 
                     ciano();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 case 2048 :
                 
                     nciano();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     reset();
 
                     break;
                 default:
                     reset();
-                    printf("%4d", mat[i][j]);
+                    printf("%5d", mat[i][j]);
                     break;
             }
         }
@@ -180,7 +181,7 @@ void botabloco(int mat[4][4]){ //Essa função adiciona a cada movimento do joga
         if (mat[linha][coluna] == 0){//usando a função rand nas variáveis anteriores,e este if, achamos as posições da matriz que podem  
                                     //receber os novos blocos de valor 2 ou 4(as que tem valor 0).
             mat[linha][coluna] = ((rand() % 2) + 1) * 2;
-            //mat[linha][coluna] = 1024;
+            //mat[linha][coluna] = 256;
             botou = 1;  //Na linha 92 onde ja foi encontrada uma posição disponível, ela recebe (0+1*2= 2) ou(1+1*2 = 4).
         }               //E levantamos a flag (botou=1) para sair do laço.
 
@@ -408,23 +409,32 @@ void top5(double tempos[25], char nome[]){
         indiceAnterior = i - 1;
         while(indiceAnterior >= 0){ //Enquanto a posição anterior for maior que zero, quer dizer que eu posso verificar as coisas
             indiceAtual = indiceAnterior + 1; //indiceAtual é a variável que armazena o indice do que está sendo verificada
-            if(tempos[indiceAtual] < tempos[indiceAnterior]){ //Se tempos na posição que está sendo verificada for menor do que o da posição anterior
+            if(tempos[indiceAtual] < tempos[indiceAnterior]){ //Se tempos na posição que está sendo verificada for menor do que o da posição anterior.
+                                                              //Se a posição anterior for 0 e a posição atual for diferente de 0 ele também vai colocar como se fosse maior
                 int valorAuxiliar = tempos[indiceAnterior]; //Ele vai armazenar o valor que está na posição anterior numa variavel auxiliar
                 tempos[indiceAnterior] = tempos[indiceAtual]; //Então vai colocar o valor da posição atual na posição anterior
                 tempos[indiceAtual] = valorAuxiliar; //Vai pegar o valor que foi salvo antes na variavel auxiliar e colocar na posição atual
             }
             else{
-                break; //Se a posição anterior não for menor ele para o while.
+                break; //Se a posição anterior não for menor ele para o while
             }
             indiceAnterior -= 1; //Diminui o valor do indice anterior
         }
     }
-    printf("Jogador: \n");
+    printf("Jogador: ");
     puts(nome);
     printf("\nMelhores tempos:\n");
     
+    int minutos, segundos, milisegundos;
+
     for (int k = 0; k < 5; k++) {
-        printf("%.2lf\n",tempos[k]);
+        if(tempos[k] == DBL_MAX){
+            tempos[k] = 0;
+        }
+        minutos = tempos[k] / 60;
+        segundos = tempos[k] - (tempos[k] / 60);
+        milisegundos = (tempos[k] - (int)tempos[k]) * 100;
+        printf("%02d:%02d.%02d\n", minutos, segundos, milisegundos);
     }
 
 }
@@ -496,10 +506,10 @@ int joga(int mapa[4][4]) {
             denovo = podeMovimentar(mapa);
             if(ganhou(mapa)){//se for verificado que há um bloco de valor 2048, o jogo também acaba.
                 denovo = 0;
-                printf("Você Venceu!!\n");
+                printf("Você Venceu!!\n\n");
             }
             else if(denovo == 0){
-                printf("Você Perdeu :(\n");
+                printf("Você Perdeu :(\n\n");
             }
 
         }else{   
@@ -521,7 +531,11 @@ int main(){
 
     int k=0, denovo=1, mapa[4][4];
     char nomejogador[20];
-    double tempos[25] = {0};
+    double tempos[25];
+
+    for(int i = 0; i < 25; i++){
+        tempos[i] = DBL_MAX;
+    }
 
     struct timespec comeco, fimtempo;
 
